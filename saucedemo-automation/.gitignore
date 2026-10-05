@@ -1,0 +1,16 @@
+node_modules/
+allure-results/
+allure-report/
+reports/allure-results/
+reports/allure-report/
+reports/cucumber-report.html
+test-results/
+playwright-report/
+screenshots/
+videos/
+traces/
+.env
+.env.*
+!.env.example
+.DS_Store
+npm-debug.log*

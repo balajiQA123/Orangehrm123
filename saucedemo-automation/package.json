@@ -1,0 +1,30 @@
+{
+  "name": "saucedemo-automation",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Playwright and Cucumber BDD UI automation for OrangeHRM and SauceDemo",
+  "scripts": {
+    "clean:reports": "node -e \"require('node:fs').rmSync('reports/allure-results', { recursive: true, force: true })\"",
+    "pretest": "npm run clean:reports",
+    "pretest:bdd": "npm run clean:reports",
+    "pretest:smoke": "npm run clean:reports",
+    "pretest:regression": "npm run clean:reports",
+    "pretest:report": "npm run clean:reports",
+    "test": "cucumber-js",
+    "test:bdd": "cucumber-js",
+    "test:smoke": "cucumber-js --tags @smoke",
+    "test:regression": "cucumber-js --tags @regression",
+    "test:report": "npm test && npm run allure:generate",
+    "allure:generate": "allure generate reports/allure-results --clean --output reports/allure-report",
+    "allure:open": "allure open reports/allure-report",
+    "report:generate": "npm run allure:generate",
+    "report:open": "npm run allure:open"
+  },
+  "devDependencies": {
+    "@cucumber/cucumber": "^13.3.0",
+    "allure-commandline": "^2.46.1",
+    "allure-cucumberjs": "^3.13.0",
+    "dotenv": "^18.0.5",
+    "playwright": "^1.63.0"
+  }
+}
