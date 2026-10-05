@@ -1,0 +1,70 @@
+name: OrangeHRM UI Tests
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: orangehrm-ui-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Playwright and Cucumber
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Set up Java for Allure
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Run BDD smoke tests
+        run: npm run test:smoke
+        env:
+          BASE_URL: https://opensource-demo.orangehrmlive.com/web/index.php/auth/login
+          ORANGEHRM_USERNAME: Admin
+          ORANGEHRM_PASSWORD: admin123
+
+      - name: Generate Allure report
+        if: always()
+        run: |
+          if [ -d allure-results ] && find allure-results -type f -name '*-result.json' | grep -q .; then
+            npm run report:generate
+          else
+            echo "No Allure test results were produced."
+          fi
+
+      - name: Upload Allure artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: orangehrm-allure-report
+          path: |
+            allure-results/
+            allure-report/
+          if-no-files-found: ignore
+          retention-days: 14

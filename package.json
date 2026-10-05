@@ -1,0 +1,22 @@
+{
+  "name": "orangehrm-playwright-cucumber",
+  "version": "1.0.0",
+  "private": true,
+  "description": "OrangeHRM UI smoke tests with Playwright, Cucumber BDD, and Allure",
+  "scripts": {
+    "clean:results": "node -e \"require('node:fs').rmSync('allure-results', { recursive: true, force: true })\"",
+    "pretest": "npm run clean:results",
+    "pretest:smoke": "npm run clean:results",
+    "test": "cucumber-js",
+    "test:smoke": "cucumber-js --tags @smoke",
+    "report:generate": "allure generate allure-results --clean --output allure-report",
+    "report:open": "allure open allure-report"
+  },
+  "devDependencies": {
+    "@cucumber/cucumber": "^13.3.0",
+    "@playwright/test": "^1.63.0",
+    "allure-commandline": "^2.46.1",
+    "allure-cucumberjs": "^3.13.0",
+    "playwright": "^1.63.0"
+  }
+}
